@@ -35,6 +35,7 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
+    loading.value = true;
     try {
       var response = await AuthService.login(
         phone: phoneController.text,
@@ -46,9 +47,8 @@ class LoginController extends GetxController {
       );
 
       if (user?.token != null) {
-        final token = user?.token;
-        final prefs = await SharedPreferences.getInstance();
-        prefs.setString('token', token!);
+        loading.value = false;
+        Preference.setUserDetails(user!);
         Get.snackbar(
           'Success',
           'Login Successful',

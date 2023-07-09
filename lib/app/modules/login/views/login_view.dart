@@ -111,7 +111,7 @@ class LoginView extends GetView<LoginController> {
                                   onTap: () async {
                                     await controller.login();
                                   },
-                                  child: controller.loading.value
+                                  child: controller.loading.value == true
                                       ? const CircularProgressIndicator(
                                           color: Colors.blue,
                                         )
