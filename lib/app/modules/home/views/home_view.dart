@@ -30,7 +30,7 @@ class HomeView extends GetView<HomeController> {
               controller.isSetLocation == true
                   ? OutlinedButton.icon(
                       onPressed: () async {},
-                      icon: const Icon(Icons.add_location_alt_outlined),
+                      icon: const Icon(Icons.remove_red_eye_outlined),
                       label: const Text("View Report"),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: const Color.fromRGBO(245, 187, 5, 1),
@@ -64,12 +64,14 @@ class HomeView extends GetView<HomeController> {
                   const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
               child: Column(
                 children: [
-                  UserInfo(
-                      name:
-                          "${controller.firstName.toString().toUpperCase()} ${controller.lastName.toString().toUpperCase()}",
-                      designation: controller.designation.toString(),
-                      distance: "Distance - ${controller.distanceInMeters} M",
-                      imgUrl: "assets/img/user.png"),
+                  Obx((){
+                    return UserInfo(
+                        name:
+                        "${controller.firstName.toString().toUpperCase()} ${controller.lastName.toString().toUpperCase()}",
+                        designation: controller.designation.toString(),
+                        distance: "Distance - ${controller.distance} M",
+                        imgUrl: "assets/img/user.png");
+                  }),
                   Row(
                     children: [
                       InfoCard(
@@ -91,20 +93,21 @@ class HomeView extends GetView<HomeController> {
                     ],
                   ),
                   const SizedBox(height: 18.0),
-                  Row(
-                    children: [
-                      InfoCard(
-                        onTap: () async {
-                          await controller.getLocationData();
-                        },
-                        icon: Icons.location_on,
-                        heading: "Current Location",
-                        text1: "Longitude: ${controller.longitude}",
-                        text2: "Latitude: ${controller.latitude}",
-                        bgColor: const Color.fromARGB(1000, 1, 166, 126),
-                      ),
-                      const SizedBox(width: 18.0),
-                      InfoCard(
+                  Obx(() {
+                    return Row(
+                      children: [
+                        InfoCard(
+                          onTap: () async {
+                            await controller.getLocationData();
+                          },
+                          icon: Icons.location_on,
+                          heading: "Current Location",
+                          text1: "Longitude: ${controller.longitude}",
+                          text2: "Latitude: ${controller.latitude}",
+                          bgColor: const Color.fromARGB(1000, 1, 166, 126),
+                        ),
+                        const SizedBox(width: 18.0),
+                        InfoCard(
                           onTap: () async {
                             await controller.getOfficeLocation();
                           },
@@ -112,9 +115,11 @@ class HomeView extends GetView<HomeController> {
                           heading: "Office Location",
                           text1: "Longitude: ${controller.offLongitude}",
                           text2: "Latitude: ${controller.offLatitude}",
-                          bgColor: const Color.fromARGB(1000, 245, 178, 5)),
-                    ],
-                  ),
+                          bgColor: const Color.fromARGB(1000, 245, 178, 5),
+                        ),
+                      ],
+                    );
+                  }),
                   const SizedBox(height: 18.0),
                   Row(
                     children: [
@@ -205,7 +210,7 @@ class HomeView extends GetView<HomeController> {
                                 ).show();
                               },
                               // minWidth: (double.infinity),
-                              color:  Colors.brown,
+                              color: Colors.brown,
                               height: (50.0),
                               textColor: Colors.white,
                               shape: RoundedRectangleBorder(
