@@ -1,11 +1,16 @@
 import 'dart:convert';
-
+import 'package:employee_attendance_getx/app/data/models/check_in_model.dart';
+import 'package:employee_attendance_getx/app/data/models/check_out_model.dart';
 import 'package:employee_attendance_getx/app/data/models/get_location_model.dart';
+import 'package:employee_attendance_getx/app/data/models/leave_apply_model.dart';
 import 'package:employee_attendance_getx/app/data/models/login_model.dart';
+import 'package:employee_attendance_getx/app/data/models/update_location_model.dart';
 import 'package:employee_attendance_getx/app/data/preference.dart';
 import 'package:employee_attendance_getx/app/data/services/home.dart';
 import 'package:employee_attendance_getx/app/data/services/location.dart';
+import 'package:employee_attendance_getx/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
@@ -18,10 +23,15 @@ class HomeController extends GetxController {
     getOfficeLocation();
   }
 
+  @override
+  void onReady() {
+    super.onReady();
+    getDistance();
+  }
+
   // variables
   RxDouble longitude = 0.0.obs;
   RxDouble latitude = 0.0.obs;
-  RxDouble distanceInMeters = 0.0.obs;
   RxDouble offLongitude = 0.0.obs;
   RxDouble offLatitude = 0.0.obs;
   RxBool isSetLocation = false.obs;
@@ -38,11 +48,16 @@ class HomeController extends GetxController {
   // models
   late LoginModel userInfo;
   late LocationModel? officeLocation;
+  late CheckInModel? checkInRes;
+  late CheckOutModel? checkOutRes;
+  late LeaveApplyModel? leaveApply;
+  late UpdateLocationModel? updateLocation;
 
   // location isSet or not
   void getUserInfo() async {
     userInfo = Preference.getUserDetails();
-    isSetLocation.value = userInfo.location!;
+    var loc = Preference.getUserLocation();
+    isSetLocation.value = loc;
     token.value = userInfo.token!;
     firstName.value = userInfo.user?.firstName! as String;
     lastName.value = userInfo.user?.lastName! as String;
@@ -115,48 +130,191 @@ class HomeController extends GetxController {
 
   // update office location
   Future<void> updateOfficeLocation() async {
-    try {} catch (e) {
+    try {
+      var response = await HomeService.updateOfficeLocation(
+        token: token.value,
+        longitude: longitude.value.toString(),
+        latitude: latitude.value.toString(),
+      );
+      updateLocation = updateLocationModelFromJson(jsonEncode(response));
+      isSetLocation.value = true;
+      if (updateLocation?.success == true) {
+        Preference.setUserLocation(true);
+        Get.snackbar(
+          'Success',
+          updateLocation?.message as String,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          icon: const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+          ),
+        );
+      } else {
+        Get.snackbar(
+          'Failed',
+          updateLocation?.message as String,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          icon: const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+          ),
+        );
+      }
+    } catch (e) {
       print(e);
     }
   }
 
   // calculate distance between office and phone location
-  Future<void> getDistance() async {
-    if (isSetLocation.value) {
+  void getDistance() {
+
+    if (isSetLocation.value == true) {
       distance.value = Geolocator.distanceBetween(
         offLatitude.value,
         offLongitude.value,
         latitude.value,
         longitude.value,
       );
-
     }
   }
 
   // check in
   Future<void> checkIn() async {
-    try {} catch (e) {
-      print(e);
+    try {
+      getDistance();
+      var response = await HomeService.checkIn(
+          token: token.value, distanceInMeters: distance.toDouble());
+      checkInRes = checkInModelFromJson(jsonEncode(response));
+      if (checkInRes?.success == true) {
+        Get.snackbar(
+          'Success',
+          checkInRes?.message as String,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          icon: const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+          ),
+        );
+      } else {
+        Get.snackbar(
+          'Failed',
+          'Something Went Wrong',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          icon: const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+          ),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Failed',
+        'Something Went Wrong',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        icon: const Icon(
+          Icons.check_circle,
+          color: Colors.white,
+        ),
+      );
     }
   }
 
   // check out
   Future<void> checkOut() async {
-    try {} catch (e) {
-      print(e);
+    try {
+      getDistance();
+      var response = await HomeService.checkOut(
+        token: token.value,
+        distanceInMeters: distance.toDouble(),
+      );
+      checkOutRes = checkOutModelFromJson(jsonEncode(response));
+      if (checkOutRes?.success == true) {
+        Get.snackbar(
+          'Success',
+          checkOutRes?.message as String,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          icon: const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+          ),
+        );
+      } else {
+        Get.snackbar(
+          'Failed',
+          'Something Went Wrong',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          icon: const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+          ),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Failed',
+        'Something Went Wrong',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        icon: const Icon(
+          Icons.check_circle,
+          color: Colors.white,
+        ),
+      );
     }
   }
 
-  void leave() async {
-    try {} catch (e) {
-      print(e);
+  // leave apply
+  Future<void> leave() async {
+    try {
+      var response = await HomeService.leaveApply(token: token.value);
+      leaveApply = leaveApplyModelFromJson(jsonEncode(response));
+      if (leaveApply?.success == true) {
+        Get.snackbar(
+          'Success',
+          leaveApply?.message as String,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          icon: const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+          ),
+        );
+      } else {
+        Get.snackbar(
+          'Failed',
+          'Something Went Wrong',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          icon: const Icon(
+            Icons.check_circle,
+            color: Colors.white,
+          ),
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Failed',
+        'Something Went Wrong',
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        icon: const Icon(
+          Icons.check_circle,
+          color: Colors.white,
+        ),
+      );
     }
   }
 
   // logout
-  Future<void> logout() async {
-    try {} catch (e) {
-      print(e);
-    }
+  void logout() {
+    Preference.clearAll();
+    Get.offAllNamed(Routes.LOGIN);
   }
 }

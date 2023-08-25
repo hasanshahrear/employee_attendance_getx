@@ -61,8 +61,9 @@ class LoginController extends GetxController {
           Preference.setLoginPass(passwordController.text);
           Preference.setRememberMeFlag(true);
           Preference.setLoggedInFlag(true);
+          Preference.setUserLocation(user?.location as bool);
         }
-        Get.toNamed(Routes.HOME);
+        Get.offAllNamed(Routes.HOME);
       } else {
         Get.snackbar(
           'Failed',

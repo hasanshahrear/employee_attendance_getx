@@ -11,9 +11,13 @@ class Preference {
   static const loginPhone = 'loginPhone';
   static const loginPass = 'loginPass';
   static const userDetails = 'userDetails';
+  static const useLocation = 'useLocation';
 
   static bool getLoggedInFlag() => prefs.read(loggedInFlag) ?? false;
   static void setLoggedInFlag(bool value) => prefs.write(loggedInFlag, value);
+
+  static bool getUserLocation() => prefs.read(useLocation) ?? false;
+  static void setUserLocation(bool value) => prefs.write(useLocation, value);
 
   static bool getRememberMeFlag() => prefs.read(rememberMeFlag) ?? false;
   static void setRememberMeFlag(bool value) =>
