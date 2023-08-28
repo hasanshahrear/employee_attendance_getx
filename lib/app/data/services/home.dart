@@ -63,4 +63,17 @@ class HomeService {
       },
     );
   }
+
+  static Future<dynamic> stationLeave(
+      {required String token, required String reason, String? startTime, String? endTime }) async {
+    return await BaseClient.postData(
+      api: ConstantStrings.kStationLeave,
+      token: token,
+      body: {
+        "reason": reason,
+        "start_time": startTime,
+        "end_time": endTime,
+      },
+    );
+  }
 }

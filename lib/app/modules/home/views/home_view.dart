@@ -3,6 +3,7 @@ import 'package:employee_attendance_getx/app/components/InfoCard.dart';
 import 'package:employee_attendance_getx/app/components/PunchCard.dart';
 import 'package:employee_attendance_getx/app/components/UserInfo.dart';
 import 'package:employee_attendance_getx/app/modules/home/controllers/sensors.dart';
+import 'package:employee_attendance_getx/app/modules/home/views/station_leave_modal_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/home_controller.dart';
@@ -216,17 +217,7 @@ class HomeView extends GetView<HomeController> {
                             flex: 3,
                             child: MaterialButton(
                               onPressed: () async {
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.question,
-                                  animType: AnimType.rightSlide,
-                                  title: 'Are you sure?',
-                                  desc: '',
-                                  btnCancelOnPress: () {},
-                                  btnOkOnPress: () {
-                                    controller.logout();
-                                  },
-                                ).show();
+                                Get.dialog(TextInputDialog());
                               },
                               color: Colors.brown,
                               height: (50.0),
