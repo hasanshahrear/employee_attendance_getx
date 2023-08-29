@@ -45,6 +45,8 @@ class SensorController extends GetxController {
     int currentY = event.y.abs().toInt();
     int currentZ = event.z.abs().toInt();
 
+
+
     // Check if there's any change in the accelerometer values
     if (currentX != 0 || currentY != 0 || currentZ != 9) {
       // Reset the timer if there's any change
@@ -55,7 +57,7 @@ class SensorController extends GetxController {
 
   void startTimer() {
     // Start a timer that fires after 1 hour (3600000 milliseconds)
-    timer = Timer(const Duration(minutes: 60), () {
+    timer = Timer(const Duration(seconds: 10), () {
       if (!apiCalled) {
         // Call the API if it hasn't been called before
         callAPI();
@@ -74,6 +76,7 @@ class SensorController extends GetxController {
 
   void callAPI() async {
     try {
+      print("work");
       DateTime time = DateTime.now();
       await HomeService.inactive(token: token.value, time: time.toString());
     } catch (e) {}

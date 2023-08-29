@@ -1,8 +1,14 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:employee_attendance_getx/app/modules/home/controllers/sensors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
+import 'package:get/get.dart';
+
+
+final SensorController _sensorController = Get.put(SensorController());
+
 
 Future<void> initializeService() async {
   var service = FlutterBackgroundService();
@@ -19,16 +25,20 @@ Future<void> initializeService() async {
 }
 
 
+
 @pragma('vm:entry-point')
 Future<bool> backgroundService(ServiceInstance serviceInstance) async{
   WidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
+
   return true;
 }
 
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) {
   DartPluginRegistrant.ensureInitialized();
+
+  print("background");
 
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
@@ -37,6 +47,7 @@ void onStart(ServiceInstance service) {
 
     service.on('setAsBackground').listen((event) {
       service.setAsBackgroundService();
+
     });
   }
 
@@ -44,14 +55,14 @@ void onStart(ServiceInstance service) {
     service.stopSelf();
   });
 
-  // Timer.periodic(const Duration(seconds: 1), (timer) async {
-  //
-  //
-  //   /// you can see this log in logcat
-  //   print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
-  //   service.invoke("update");
-  //
-  //
-  // });
+  Timer.periodic(const Duration(seconds: 10), (timer) async {
+
+    _sensorController.onInit();
+    /// you can see this log in logcat
+    print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
+    service.invoke("update");
+
+
+  });
 
 }
