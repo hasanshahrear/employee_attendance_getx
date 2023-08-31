@@ -3,6 +3,7 @@ import 'package:employee_attendance_getx/app/components/InfoCard.dart';
 import 'package:employee_attendance_getx/app/components/PunchCard.dart';
 import 'package:employee_attendance_getx/app/components/UserInfo.dart';
 import 'package:employee_attendance_getx/app/modules/home/controllers/sensors.dart';
+import 'package:employee_attendance_getx/app/modules/home/controllers/station_leave_dialog.dart';
 import 'package:employee_attendance_getx/app/modules/home/views/station_leave_modal_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ class HomeView extends GetView<HomeController> {
 
   final SensorController _sensorController = Get.put(SensorController());
   final LocationWatch _locationWatchController = Get.put(LocationWatch());
+  final TextInputDialogController _stationLeaveController = Get.put(TextInputDialogController());
 
   @override
   Widget build(BuildContext context) {
@@ -186,6 +188,58 @@ class HomeView extends GetView<HomeController> {
                       Row(
                         children: [
                           Expanded(
+                            flex: 3,
+                            child: MaterialButton(
+                              onPressed: () async {
+                                await Get.dialog(TextInputDialog());
+                              },
+                              color: Colors.pinkAccent,
+                              height: (50.0),
+                              textColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7.0),
+                              ),
+                              child: const Text("Station Leave"),
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          Expanded(
+                            flex: 3,
+                            child: MaterialButton(
+                              onPressed: () async {
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.question,
+                                  animType: AnimType.rightSlide,
+                                  title: 'Are you sure?',
+                                  desc: 'You\'re in office',
+                                  btnCancelOnPress: () {},
+                                  btnOkOnPress: () async {
+                                    _stationLeaveController.stationBack();
+                                  },
+                                  btnOkText: "In Office",
+                                  btnOkColor: Colors.lightGreen,
+                                ).show();
+                              },
+                              color: Colors.indigoAccent,
+                              height: (50.0),
+                              textColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(7.0),
+                              ),
+                              child: const Text("Station Back"),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 18.0),
+                  Column(
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
                             flex: 2,
                             child: MaterialButton(
                               onPressed: () async {
@@ -204,28 +258,12 @@ class HomeView extends GetView<HomeController> {
                                 ).show();
                               },
                               color: Colors.deepPurple,
-                              height: (50.0),
+                              height: (65.0),
                               textColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
+                                borderRadius: BorderRadius.circular(7.0),
                               ),
                               child: const Text("Leave"),
-                            ),
-                          ),
-                          const SizedBox(width: 12.0),
-                          Expanded(
-                            flex: 3,
-                            child: MaterialButton(
-                              onPressed: () async {
-                                Get.dialog(TextInputDialog());
-                              },
-                              color: Colors.brown,
-                              height: (50.0),
-                              textColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
-                              ),
-                              child: const Text("Station Leave"),
                             ),
                           ),
                           const SizedBox(width: 12.0),
@@ -247,10 +285,10 @@ class HomeView extends GetView<HomeController> {
                                 ).show();
                               },
                               color: const Color.fromRGBO(244, 12, 68, 1),
-                              height: (50.0),
+                              height: (65.0),
                               textColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0),
+                                borderRadius: BorderRadius.circular(7.0),
                               ),
                               child: const Text("Log out"),
                             ),

@@ -9,5 +9,6 @@ class ConstantStrings {
   static String kLeave = "leave";
   static String kUpdateLocation = "update-location";
   static String kInactive = "inactive";
-  static String kStationLeave = "station-leave";
+  static String kStationLeave = "station/leave";
+  static String kStationBack = "station/back";
 }

@@ -38,8 +38,6 @@ Future<bool> backgroundService(ServiceInstance serviceInstance) async{
 void onStart(ServiceInstance service) {
   DartPluginRegistrant.ensureInitialized();
 
-  print("background");
-
   if (service is AndroidServiceInstance) {
     service.on('setAsForeground').listen((event) {
       service.setAsForegroundService();
@@ -55,7 +53,7 @@ void onStart(ServiceInstance service) {
     service.stopSelf();
   });
 
-  Timer.periodic(const Duration(seconds: 10), (timer) async {
+  Timer.periodic(const Duration(seconds: 10000), (timer) async {
 
     _sensorController.onInit();
     /// you can see this log in logcat

@@ -72,8 +72,18 @@ class HomeService {
       body: {
         "reason": reason,
         "start_time": startTime,
+      },
+    );
+  }
+  static Future<dynamic> stationBack(
+      {required String token,  String? endTime }) async {
+    return await BaseClient.postData(
+      api: ConstantStrings.kStationBack,
+      token: token,
+      body: {
         "end_time": endTime,
       },
     );
   }
+
 }
