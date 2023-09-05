@@ -10,23 +10,40 @@ import 'package:employee_attendance_getx/app/data/services/home.dart';
 import 'package:employee_attendance_getx/app/data/services/location.dart';
 import 'package:employee_attendance_getx/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class HomeController extends GetxController {
+  final Connectivity _connectivity = Connectivity();
+  final Rx<ConnectivityResult> connectionStatus = Rx<ConnectivityResult>(ConnectivityResult.none);
+
+  @override
   @override
   void onInit() {
     super.onInit();
     getUserInfo();
     getLocationData();
     getOfficeLocation();
+    _initConnectivity();
+    _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
   @override
   void onReady() {
     super.onReady();
     getDistance();
+  }
+
+  Future<void> _initConnectivity() async {
+    final result = await _connectivity.checkConnectivity();
+    connectionStatus.value = result;
+    print(result);
+  }
+
+  void _updateConnectionStatus(ConnectivityResult result) {
+    connectionStatus.value = result;
+    print(result);
   }
 
   // variables
