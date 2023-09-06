@@ -205,6 +205,7 @@ class HomeController extends GetxController {
           token: token.value, distanceInMeters: distance.toDouble());
       checkInRes = checkInModelFromJson(jsonEncode(response));
       if (checkInRes?.success == true) {
+        Preference.setCheckInFlag(true);
         Get.snackbar(
           'Success',
           checkInRes?.message as String,
@@ -251,6 +252,7 @@ class HomeController extends GetxController {
       );
       checkOutRes = checkOutModelFromJson(jsonEncode(response));
       if (checkOutRes?.success == true) {
+        Preference.setCheckInFlag(false);
         Get.snackbar(
           'Success',
           checkOutRes?.message as String,

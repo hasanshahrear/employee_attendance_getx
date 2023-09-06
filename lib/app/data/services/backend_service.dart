@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:employee_attendance_getx/app/modules/home/controllers/connectivity_controller.dart';
 import 'package:employee_attendance_getx/app/modules/home/controllers/sensors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -8,6 +9,7 @@ import 'package:get/get.dart';
 
 
 final SensorController _sensorController = Get.put(SensorController());
+final ConnectivityController _connectivityController = Get.put(ConnectivityController());
 
 
 Future<void> initializeService() async {
@@ -56,6 +58,7 @@ void onStart(ServiceInstance service) {
   Timer.periodic(const Duration(seconds: 10000), (timer) async {
 
     _sensorController.onInit();
+    _connectivityController.onInit();
     /// you can see this log in logcat
     print('FLUTTER BACKGROUND SERVICE: ${DateTime.now()}');
     service.invoke("update");

@@ -12,6 +12,8 @@ class Preference {
   static const loginPass = 'loginPass';
   static const userDetails = 'userDetails';
   static const useLocation = 'useLocation';
+  static const dataOffTime = "dataOffTime";
+  static const checkInFlag = 'checkInFlag';
 
   static bool getLoggedInFlag() => prefs.read(loggedInFlag) ?? false;
   static void setLoggedInFlag(bool value) => prefs.write(loggedInFlag, value);
@@ -28,6 +30,12 @@ class Preference {
 
   static String getLoginPass() => prefs.read(loginPass) ?? '';
   static void setLoginPass(String value) => prefs.write(loginPass, value);
+
+  static String getDataOffTime()=> prefs.read(dataOffTime) ?? '';
+  static void setDataOffTime (String value) => prefs.write(dataOffTime, value);
+
+  static bool getCheckInFlag() => prefs.read(checkInFlag) ?? false;
+  static void setCheckInFlag(bool value) => prefs.write(checkInFlag, value);
 
   static LoginModel getUserDetails() {
     var result = prefs.read(userDetails);
