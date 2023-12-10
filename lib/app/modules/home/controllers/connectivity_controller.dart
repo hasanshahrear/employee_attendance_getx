@@ -21,7 +21,6 @@ class ConnectivityController extends GetxController {
 
   void _updateConnectionStatus(ConnectivityResult result) {
     connectionStatus.value = result;
-
     // Call getOutOfConnection method when status changes
     getOutOfConnection(result);
   }
