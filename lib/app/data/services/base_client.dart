@@ -54,6 +54,7 @@ class BaseClient {
       );
       print('POST Method: ${response.statusCode}');
       print(url);
+      print(response.data);
       return response.data;
     } on DioException catch (e) {
       return e.response?.data;
